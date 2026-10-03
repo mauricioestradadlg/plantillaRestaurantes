@@ -850,12 +850,12 @@ sin afectar las tarjetas.
 
   z-index: 0;
 
-  background:
-    color-mix(
-      in srgb,
-      var(--benefits-bg) 76%,
-      transparent
-    );
+  /*
+  IMPORTANTE:
+  cuando se utiliza una imagen de fondo, no mezclamos
+  el color de respaldo encima de la fotografía.
+  */
+  background: transparent;
 
   pointer-events: none;
 }
@@ -1018,12 +1018,11 @@ BENEFICIOS > texto_color
   inset: 0;
   z-index: 0;
 
-  background:
-    color-mix(
-      in srgb,
-      var(--gallery-bg) 70%,
-      transparent
-    );
+  /*
+  La imagen de fondo se muestra sin ser cubierta
+  por el color de respaldo de Galería.
+  */
+  background: transparent;
 
   pointer-events: none;
 }
@@ -1111,12 +1110,11 @@ BENEFICIOS > texto_color
   inset: 0;
   z-index: 0;
 
-  background:
-    color-mix(
-      in srgb,
-      var(--faq-bg) 72%,
-      transparent
-    );
+  /*
+  La imagen de fondo se muestra sin ser cubierta
+  por el color de respaldo de FAQ.
+  */
+  background: transparent;
 
   pointer-events: none;
 }
@@ -2297,7 +2295,13 @@ sin desbordarse.
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: color-mix(in srgb, var(--contact-bg) 70%, transparent);
+
+  /*
+  La imagen de fondo se muestra sin ser cubierta
+  por el color de respaldo de Contacto.
+  */
+  background: transparent;
+
   pointer-events: none;
 }
 
