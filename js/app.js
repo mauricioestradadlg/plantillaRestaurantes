@@ -541,29 +541,116 @@ function applySectionBackground({
   }
 
   const normalizedMode = normalizeText(mode || 'Color');
-  const useImage = ['imagen', 'image', 'foto'].includes(normalizedMode);
+
+  const useImage = [
+    'imagen',
+    'image',
+    'foto'
+  ].includes(normalizedMode);
+
+
+  /* =====================================================
+     LIMPIAR EL ESTADO ANTERIOR
+     ===================================================== */
 
   section.classList.remove('has-background-image');
+
   section.style.removeProperty('background-image');
+  section.style.removeProperty('background-color');
+  section.style.removeProperty('background-position');
+  section.style.removeProperty('background-size');
+  section.style.removeProperty('background-repeat');
+
+
+  /* =====================================================
+     MODO COLOR
+     ===================================================== */
 
   if (!useImage) {
+    /*
+    En modo Color no colocamos estilos inline.
+
+    El color vuelve a depender de las variables CSS:
+    --hero-bg
+    --menu-bg
+    --benefits-bg
+    --gallery-bg
+    --faq-bg
+    --contact-bg
+
+    Esas variables ya son actualizadas por applyTheme().
+    */
     return;
   }
 
-  const safeFilename = safeAssetName(filename, fallbackFilename);
+
+  /* =====================================================
+     MODO IMAGEN
+     ===================================================== */
+
+  const safeFilename = safeAssetName(
+    filename,
+    fallbackFilename
+  );
+
+  if (!safeFilename) {
+    console.warn(
+      `No se indicó una imagen válida para ${selector}`
+    );
+    return;
+  }
+
   const src = `img/${safeFilename}?v=${Date.now()}`;
+
   const image = new Image();
 
+
+  /* =====================================================
+     IMAGEN CARGADA CORRECTAMENTE
+     ===================================================== */
+
   image.onload = () => {
+    /*
+    Cuando Excel indica "Imagen", hacemos transparente
+    el color de respaldo de la propia sección.
+
+    De esta manera el color predeterminado no cubre
+    visualmente la fotografía.
+    */
+    section.style.backgroundColor = 'transparent';
+
     section.style.backgroundImage = `url("${src}")`;
+
+    section.style.backgroundPosition = 'center';
+    section.style.backgroundSize = 'cover';
+    section.style.backgroundRepeat = 'no-repeat';
+
     section.classList.add('has-background-image');
   };
 
+
+  /* =====================================================
+     ERROR AL CARGAR LA IMAGEN
+     ===================================================== */
+
   image.onerror = () => {
     section.classList.remove('has-background-image');
+
     section.style.removeProperty('background-image');
-    console.warn(`No se pudo cargar la imagen: ${safeFilename}`);
+    section.style.removeProperty('background-color');
+    section.style.removeProperty('background-position');
+    section.style.removeProperty('background-size');
+    section.style.removeProperty('background-repeat');
+
+    console.warn(
+      `No se pudo cargar la imagen: ${safeFilename}`
+    );
   };
+
+
+  /* =====================================================
+     INICIAR CARGA
+     ===================================================== */
 
   image.src = src;
 }
